@@ -5,69 +5,117 @@
 <title>Register</title>
 
 <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
+}
+
 body {
     height: 100vh;
-    background: #0f0f1a;
+    background: linear-gradient(135deg, #0f0f1a, #1a1a40);
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: "Segoe UI";
 }
 
-/* Container */
+/* Container (BIGGER 🔥) */
 .container {
-    width: 450px;
+    width: 520px;
     background: #1c1c2b;
-    padding: 40px;
-    border-radius: 20px;
+    padding: 50px;
+    border-radius: 25px;
     color: #fff;
     position: relative;
-    box-shadow: 0 0 25px rgba(0,0,0,0.5);
+    box-shadow: 0 25px 70px rgba(0,0,0,0.7);
+    text-align: center;
+    animation: fadeIn 0.6s ease;
 }
 
-/* Back Button */
+/* Smooth entry */
+@keyframes fadeIn {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* 🔥 MODERN BACK BUTTON */
 .back-btn {
     position: absolute;
     top: 15px;
     left: 20px;
+    padding: 6px 12px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(5px);
     cursor: pointer;
     color: #aaa;
     font-size: 14px;
+    transition: 0.3s;
 }
+
 .back-btn:hover {
-    color: #fff;
+    background: #7a3cff;
+    color: white;
+    transform: translateX(-3px);
+}
+
+/* Heading */
+h2 {
+    margin-bottom: 30px;
+    font-size: 28px;
 }
 
 /* Inputs */
+.input-box {
+    margin-bottom: 18px;
+}
+
 input {
     width: 100%;
-    padding: 12px;
-    margin-bottom: 15px;
-    background: transparent;
+    padding: 15px;
+    background: #1c1c2b;
     border: 1px solid #444;
-    border-radius: 8px;
+    border-radius: 10px;
     color: #fff;
     outline: none;
+    font-size: 15px;
 }
 
 input:focus {
     border-color: #7a3cff;
 }
 
+/* Error */
+.error {
+    font-size: 12px;
+    color: #ff4d4d;
+    text-align: left;
+    margin-top: 5px;
+}
+
 /* Button */
 button {
     width: 100%;
-    padding: 12px;
+    padding: 15px;
     border: none;
-    border-radius: 8px;
-    background: #7a3cff;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #7a3cff, #5f2bff);
     color: white;
     cursor: pointer;
     font-weight: bold;
+    font-size: 15px;
     transition: 0.3s;
 }
+
 button:hover {
-    background: #692de0;
+    transform: scale(1.05);
 }
 
 /* Popup */
@@ -86,31 +134,27 @@ button:hover {
     transition: 0.3s;
 }
 
-/* Popup Box */
-.popup-box {
-    background: #1c1c2b;
-    padding: 30px 40px;
-    border-radius: 15px;
-    text-align: center;
-    color: #fff;
-    box-shadow: 0 0 25px rgba(122,60,255,0.6);
-    animation: pop 0.4s ease;
-}
-
-/* Tick Icon */
-.tick {
-    font-size: 40px;
-    color: #00ffae;
-    margin-bottom: 10px;
-}
-
-/* Show popup */
 .popup.show {
     visibility: visible;
     opacity: 1;
 }
 
-/* Animation */
+.popup-box {
+    background: #1c1c2b;
+    padding: 35px 50px;
+    border-radius: 20px;
+    text-align: center;
+    color: #fff;
+    box-shadow: 0 0 30px rgba(122,60,255,0.6);
+    animation: pop 0.4s ease;
+}
+
+.tick {
+    font-size: 45px;
+    color: #00ffae;
+    margin-bottom: 10px;
+}
+
 @keyframes pop {
     from {
         transform: scale(0.7);
@@ -130,22 +174,33 @@ button:hover {
 
 <div class="back-btn" onclick="goBack()">← Back</div>
 
-<h2>Create Account</h2>
+<h2>Create Account 🚀</h2>
 
-<input type="text" id="username" placeholder="Username">
-<input type="email" id="email" placeholder="Email">
-<input type="password" id="password" placeholder="Password">
+<div class="input-box">
+    <input type="text" id="username" placeholder="Username">
+    <div id="userError" class="error"></div>
+</div>
+
+<div class="input-box">
+    <input type="email" id="email" placeholder="Email">
+    <div id="emailError" class="error"></div>
+</div>
+
+<div class="input-box">
+    <input type="password" id="password" placeholder="Password">
+    <div id="passError" class="error"></div>
+</div>
 
 <button onclick="registerUser()">Create Account</button>
 
 </div>
 
-<!-- Success Popup -->
+<!-- Popup -->
 <div id="successPopup" class="popup">
     <div class="popup-box">
         <div class="tick">✔</div>
         <h3>Account Created!</h3>
-        <p>Redirecting to login page...</p>
+        <p>Redirecting to login...</p>
     </div>
 </div>
 
@@ -155,16 +210,39 @@ function goBack() {
     window.location.href = "/";
 }
 
+function validateInputs(username, email, password) {
+    let valid = true;
+
+    document.getElementById("userError").innerText = "";
+    document.getElementById("emailError").innerText = "";
+    document.getElementById("passError").innerText = "";
+
+    if (username.length < 3) {
+        document.getElementById("userError").innerText = "Username must be at least 3 characters";
+        valid = false;
+    }
+
+    let emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+    if (!email.match(emailPattern)) {
+        document.getElementById("emailError").innerText = "Enter valid email";
+        valid = false;
+    }
+
+    if (password.length < 6) {
+        document.getElementById("passError").innerText = "Password must be at least 6 characters";
+        valid = false;
+    }
+
+    return valid;
+}
+
 async function registerUser() {
 
     let username = document.getElementById("username").value.trim();
     let email = document.getElementById("email").value.trim();
     let password = document.getElementById("password").value.trim();
 
-    if (!username || !email || !password) {
-        alert("Fill all fields");
-        return;
-    }
+    if (!validateInputs(username, email, password)) return;
 
     try {
         let res = await fetch("/register", {
@@ -177,19 +255,15 @@ async function registerUser() {
 
         if (data.status === "success") {
 
-            let popup = document.getElementById("successPopup");
-            popup.classList.add("show");
+            document.getElementById("successPopup").classList.add("show");
 
-            // Redirect after 4 seconds
             setTimeout(() => {
                 window.location.href = "/";
-            }, 4000);
+            }, 2500);
 
-        } 
-        else if (data.status === "user_exists") {
+        } else if (data.status === "user_exists") {
             alert("User already exists ⚠️");
-        } 
-        else {
+        } else {
             alert("Error ❌");
         }
 

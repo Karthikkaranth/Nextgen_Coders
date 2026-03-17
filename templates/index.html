@@ -21,7 +21,6 @@ body {
     align-items: center;
 }
 
-/* LOGIN BOX */
 .container {
     width: 420px;
     background: #1c1c2b;
@@ -40,7 +39,6 @@ h2 {
     margin-bottom: 18px;
 }
 
-/* INPUT FIX */
 .input-box input {
     width: 100%;
     padding: 14px;
@@ -55,15 +53,25 @@ h2 {
     border-color: #7a3cff;
 }
 
-/* AUTOFILL FIX */
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus {
-    -webkit-box-shadow: 0 0 0px 1000px #1c1c2b inset !important;
-    -webkit-text-fill-color: #fff !important;
+/* 🔥 ERROR BOX */
+.error-box {
+    display: none;
+    background: rgba(255, 77, 77, 0.1);
+    color: #ff4d4d;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    text-align: left;
+    animation: fadeIn 0.3s ease;
 }
 
-/* BUTTON */
+@keyframes fadeIn {
+    from {opacity: 0; transform: translateY(-5px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+
+/* Button */
 .btn {
     width: 100%;
     padding: 14px;
@@ -72,9 +80,15 @@ input:-webkit-autofill:focus {
     background: linear-gradient(135deg, #7a3cff, #5f2bff);
     color: white;
     cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
 }
 
-/* PASSWORD BOX */
+.btn:hover {
+    transform: scale(1.03);
+}
+
+/* Password */
 .password-box {
     position: relative;
 }
@@ -83,7 +97,6 @@ input:-webkit-autofill:focus {
     padding-right: 45px;
 }
 
-/* 🔥 SIMPLE EYE ICON */
 .eye {
     position: absolute;
     right: 12px;
@@ -99,7 +112,22 @@ input:-webkit-autofill:focus {
     opacity: 1;
 }
 
-/* SUCCESS OVERLAY */
+/* Register */
+.register-text {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #aaa;
+}
+
+.register-text button {
+    background: none;
+    border: none;
+    color: #7a3cff;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Success */
 .overlay {
     position: fixed;
     top: 0;
@@ -111,7 +139,6 @@ input:-webkit-autofill:focus {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    z-index: 9999;
 }
 
 .overlay.active {
@@ -120,9 +147,7 @@ input:-webkit-autofill:focus {
 
 .success-text {
     font-size: 36px;
-    font-weight: bold;
     color: #00ffae;
-    margin-bottom: 25px;
 }
 
 .loader {
@@ -145,6 +170,9 @@ input:-webkit-autofill:focus {
 <div class="container">
     <h2>Welcome 👋</h2>
 
+    <!-- 🔥 ERROR BOX -->
+    <div id="errorBox" class="error-box"></div>
+
     <div class="input-box">
         <input type="text" id="loginUsername" placeholder="Enter your username">
     </div>
@@ -152,19 +180,20 @@ input:-webkit-autofill:focus {
     <div class="input-box password-box">
         <input type="password" id="loginPassword" placeholder="Enter your password">
 
-        <!-- 👁️ SIMPLE SVG ICON -->
         <svg class="eye" onclick="togglePassword()" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="white">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+            <path stroke-width="2" d="M15 12a3 3 0 11-6 0"/>
+            <path stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7"/>
         </svg>
     </div>
 
     <button class="btn" onclick="loginUser()">Login</button>
+
+    <p class="register-text">
+        Don’t have an account?
+        <button onclick="goToRegister()">Create one</button>
+    </p>
 </div>
 
-<!-- SUCCESS -->
 <div class="overlay" id="overlay">
     <div class="success-text">Login Successful</div>
     <div class="loader"></div>
@@ -174,40 +203,54 @@ input:-webkit-autofill:focus {
 
 function togglePassword() {
     let password = document.getElementById("loginPassword");
+    password.type = password.type === "password" ? "text" : "password";
+}
 
-    if (password.type === "password") {
-        password.type = "text";
-    } else {
-        password.type = "password";
-    }
+function goToRegister() {
+    window.location.href = "/account";
+}
+
+function showError(msg) {
+    let box = document.getElementById("errorBox");
+    box.innerText = msg;
+    box.style.display = "block";
+}
+
+function hideError() {
+    document.getElementById("errorBox").style.display = "none";
 }
 
 async function loginUser() {
-
-    let username = document.getElementById("loginUsername").value;
-    let password = document.getElementById("loginPassword").value;
+    let username = document.getElementById("loginUsername").value.trim();
+    let password = document.getElementById("loginPassword").value.trim();
 
     if (!username || !password) {
-        alert("Fill all fields");
+        showError("⚠️ Please fill all fields");
         return;
     }
 
-    let res = await fetch("/login", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({username, password})
-    });
+    try {
+        let res = await fetch("/login", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({username, password})
+        });
 
-    let data = await res.json();
+        let data = await res.json();
 
-    if (data.status === "success") {
-        document.getElementById("overlay").classList.add("active");
+        if (data.status === "success") {
+            hideError();
+            document.getElementById("overlay").classList.add("active");
 
-        setTimeout(() => {
-            window.location.href = "/chat";
-        }, 3000);
-    } else {
-        alert("Invalid credentials");
+            setTimeout(() => {
+                window.location.href = "/chat";
+            }, 2000);
+        } else {
+            showError("❌ Invalid username or password");
+        }
+
+    } catch {
+        showError("⚠️ Server error. Try again.");
     }
 }
 </script>
