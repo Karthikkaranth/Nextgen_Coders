@@ -1,250 +1,227 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Modern Chat UI</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register</title>
 
-    <style>
-        body {
+<style>
+* {
     margin: 0;
-    font-family: 'Segoe UI', sans-serif;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
+}
+
+body {
     height: 100vh;
+    background: #0f0f1a;
     display: flex;
     justify-content: center;
     align-items: center;
-
-    /* Dark UI / Purple Twilight Background */
-    background:
-        radial-gradient(circle at 20% 30%, rgba(120, 60, 200, 0.25), transparent 40%),
-        radial-gradient(circle at 80% 70%, rgba(80, 0, 150, 0.35), transparent 40%),
-        linear-gradient(180deg, #0b0615 0%, #120824 40%, #1a0f35 70%, #0a0715 100%);
 }
 
-        /* Main White Panel */
-        .panel {
-            width: 900px;
-            height: 550px;
-            background: #ffffff;
-            border-radius: 20px;
-            display: flex;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-            overflow: hidden;
-        }
-
-        /* Left Section (branding / visual) */
-        .left {
-            width: 35%;
-            background: #f7f9fc;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .circle {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background: #e0e6ed;
-        }
-
-        /* Right Section (chat area) */
-        .right {
-            width: 65%;
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-        }
-
-        /* Chat container */
-        #chat-container {
-            flex: 1;
-            overflow-y: auto;
-            padding-right: 10px;
-        }
-.bubble {
-    max-width: 70%;
-    padding: 12px 16px;
-    margin: 6px 0;
-    border-radius: 14px;
-    font-size: 14px;
-    line-height: 1.4;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+/* Full Card */
+.container {
+    width: 450px;
+    background: #1c1c2b;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    color: #fff;
 }
 
-        .user {
-            background: #f1f3f5;
-            align-self: flex-start;
-        }
-        select {
-    padding: 10px;
-    border-radius: 10px;
-    border: 1px solid #d6d9e0;
-    background: white;
-    cursor: pointer;
-    transition: all 0.2s ease;
+h2 {
+    margin-bottom: 25px;
+    font-size: 26px;
+    text-align: center;
 }
 
-select:hover {
-    border-color: #7b2ff7;
+/* Input Fields */
+.input-box {
+    margin-bottom: 15px;
 }
 
-        .system {
-            background: #4CAF50;
-            color: white;
-            align-self: flex-end;
-            text-align: right;
-        }
-
-        .date-label {
-            display: block;
-            font-size: 10px;
-            margin-top: 4px;
-            opacity: 0.7;
-        }
-
-        /* Input area */
-        .input-area {
-            display: flex;
-            margin-top: 10px;
-            gap: 10px;
-        }
-
-       input {
-    flex: 1;
-    padding: 11px 12px;
-    border-radius: 10px;
-    border: 1px solid #d6d9e0;
+.input-box input {
+    width: 100%;
+    padding: 12px;
+    background: transparent;
+    border: 1px solid #444;
+    border-radius: 8px;
+    color: #fff;
     outline: none;
-    font-size: 14px;
-    transition: all 0.25s ease;
 }
 
-input:focus {
-    border-color: #7b2ff7;
-    box-shadow: 0 0 0 2px rgba(123,47,247,0.2);
+.input-box input:focus {
+    border-color: #7a3cff;
 }
 
-        /* Green CTA Button */
-       button {
-    background: linear-gradient(135deg, #7b2ff7, #f107a3);
-    border: none;
-    padding: 11px 20px;
-    border-radius: 10px;
-    color: white;
-    font-weight: 600;
-    letter-spacing: 0.5px;
+/* Error Message */
+.error {
+    color: #ff4d4d;
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+/* Password toggle */
+.password-box {
+    position: relative;
+}
+
+.password-box span {
+    position: absolute;
+    right: 12px;
+    top: 12px;
     cursor: pointer;
-    transition: all 0.25s ease;
-    box-shadow: 0 8px 18px rgba(123,47,247,0.35);
+    color: #aaa;
 }
 
-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 24px rgba(123,47,247,0.55);
+/* Checkbox */
+.checkbox {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    margin-top: 10px;
+    margin-bottom: 20px;
 }
 
-button:active {
-    transform: scale(0.96);
+.checkbox input {
+    margin-right: 8px;
 }
 
-        button:hover {
-            background: #27ae60;
-        }
+/* Button */
+.btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #7a3cff, #5f2bff);
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
 
-        /* Grey helper text */
-        .helper {
-            font-size: 12px;
-            color: #999;
-            margin-top: 5px;
-        }
-    </style>
+.btn:hover {
+    opacity: 0.9;
+}
+
+/* Login link */
+.login {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.login a {
+    color: #7a3cff;
+    text-decoration: none;
+}
+
+/* Highlight error input */
+.input-error {
+    border-color: #ff4d4d !important;
+}
+</style>
 </head>
 
 <body>
 
-<div class="panel">
+<div class="container">
 
-    <!-- LEFT SIDE -->
-    <div class="left">
-        <div class="circle"></div>
+    <h2>Create an Account</h2>
+
+    <div class="input-box">
+        <input type="text" id="username" placeholder="Username">
+        <div class="error" id="userError"></div>
     </div>
 
-    <!-- RIGHT SIDE -->
-    <div class="right">
-
-        <div id="chat-container"></div>
-
-        <div class="input-area">
-            <select id="language">
-                <option value="as">Assamese</option>
-                <option value="bn">Bengali</option>
-                <option value="brx">Bodo</option>
-                <option value="doi">Dogri</option>
-                <option value="gu">Gujarati</option>
-                <option value="hi">Hindi</option>
-                <option value="kn">Kannada</option>
-                <option value="ks">Kashmiri</option>
-                <option value="kok">Konkani</option>
-                <option value="mai">Maithili</option>
-                <option value="ml">Malayalam</option>
-                <option value="mni">Manipuri</option>
-                <option value="mr">Marathi</option>
-                <option value="ne">Nepali</option>
-                <option value="or">Odia</option>
-                <option value="pa">Punjabi</option>
-                <option value="sa">Sanskrit</option>
-                <option value="sat">Santali</option>
-                <option value="sd">Sindhi</option>
-                <option value="ta">Tamil</option>
-                <option value="te">Telugu</option>
-                <option value="ur">Urdu</option>
-                </select>
-            <input type="text" id="userInput" placeholder="Type here...">
-            <button onclick="sendMessage()">Send</button>
-        </div>
-
-        <div class="helper">Your messages are securely processed</div>
-
+    <div class="input-box">
+        <input type="email" id="email" placeholder="Email">
+        <div class="error" id="emailError"></div>
     </div>
+
+    <div class="input-box password-box">
+        <input type="password" id="password" placeholder="Password">
+        <span onclick="togglePassword()">👁</span>
+        <div class="error" id="passError"></div>
+    </div>
+
+    <div class="checkbox">
+        <input type="checkbox" id="terms">
+        <label>I agree to Terms & Conditions</label>
+    </div>
+    <div class="error" id="termsError"></div>
+
+    <button class="btn" onclick="validateForm()">Create Account</button>
+
+    <div class="login">
+        Already have an account? <a href="#">Login</a>
+    </div>
+
 </div>
 
 <script>
-    const container = document.getElementById('chat-container');
+function togglePassword() {
+    let pass = document.getElementById("password");
+    pass.type = pass.type === "password" ? "text" : "password";
+}
 
-    function addBubble(text, sender, date = "") {
-        const div = document.createElement('div');
-        div.className = `bubble ${sender}`;
-        div.innerHTML = `<pre>${text}</pre>`;
-        if(date) {
-            div.innerHTML += `<span class="date-label">${date}</span>`;
-        }
-        container.appendChild(div);
-        container.scrollTop = container.scrollHeight;
+function validateForm() {
+    let username = document.getElementById("username");
+    let email = document.getElementById("email");
+    let password = document.getElementById("password");
+    let terms = document.getElementById("terms");
+
+    let isValid = true;
+
+    // Clear previous errors
+    document.querySelectorAll(".error").forEach(e => e.innerText = "");
+    document.querySelectorAll("input").forEach(i => i.classList.remove("input-error"));
+
+    // Username validation
+    if (username.value.trim() === "") {
+        setError(username, "Username is required", "userError");
+        isValid = false;
+    } else if (username.value.includes(" ")) {
+        setError(username, "Username should not contain spaces", "userError");
+        isValid = false;
     }
 
-    window.onload = async () => {
-        const res = await fetch('/history');
-        const history = await res.json();
-        history.forEach(m => addBubble(m.text, m.sender, m.date_str));
-    };
-
-    async function sendMessage() {
-        const input = document.getElementById('userInput');
-        const lang = document.getElementById('language');
-        const val = input.value;
-        if(!val) return;
-
-        addBubble(val, 'user');
-        input.value = '';
-
-        const res = await fetch('/send', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({text: val,lan:lang})
-        });
-
-        const data = await res.json();
-        addBubble(data.reply, 'system', data.date);
+    // Email validation
+    let emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+    if (email.value.trim() === "") {
+        setError(email, "Email is required", "emailError");
+        isValid = false;
+    } else if (!email.value.match(emailPattern)) {
+        setError(email, "Enter a valid email", "emailError");
+        isValid = false;
     }
+
+    // Password validation
+    if (password.value.trim() === "") {
+        setError(password, "Password is required", "passError");
+        isValid = false;
+    } else if (password.value.length < 6) {
+        setError(password, "Password must be at least 6 characters", "passError");
+        isValid = false;
+    }
+
+    // Terms validation
+    if (!terms.checked) {
+        document.getElementById("termsError").innerText = "You must accept Terms & Conditions";
+        isValid = false;
+    }
+
+    if (isValid) {
+        alert("Account Created Successfully 🚀");
+    }
+}
+
+function setError(input, message, errorId) {
+    input.classList.add("input-error");
+    document.getElementById(errorId).innerText = message;
+}
 </script>
 
 </body>
