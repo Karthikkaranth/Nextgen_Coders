@@ -5,16 +5,19 @@
 
     <style>
         body {
-            margin: 0;
-            font-family: 'Segoe UI', sans-serif;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-            /* Blue → Purple Gradient */
-            background: linear-gradient(to top, #0a1f44, #6a11cb);
-        }
+    /* Dark UI / Purple Twilight Background */
+    background:
+        radial-gradient(circle at 20% 30%, rgba(120, 60, 200, 0.25), transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(80, 0, 150, 0.35), transparent 40%),
+        linear-gradient(180deg, #0b0615 0%, #120824 40%, #1a0f35 70%, #0a0715 100%);
+}
 
         /* Main White Panel */
         .panel {
@@ -57,19 +60,32 @@
             overflow-y: auto;
             padding-right: 10px;
         }
-
-        .bubble {
-            max-width: 70%;
-            padding: 10px 14px;
-            margin: 6px 0;
-            border-radius: 12px;
-            font-size: 14px;
-        }
+.bubble {
+    max-width: 70%;
+    padding: 12px 16px;
+    margin: 6px 0;
+    border-radius: 14px;
+    font-size: 14px;
+    line-height: 1.4;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+}
 
         .user {
             background: #f1f3f5;
             align-self: flex-start;
         }
+        select {
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #d6d9e0;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+select:hover {
+    border-color: #7b2ff7;
+}
 
         .system {
             background: #4CAF50;
@@ -92,23 +108,43 @@
             gap: 10px;
         }
 
-        input {
-            flex: 1;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            outline: none;
-        }
+       input {
+    flex: 1;
+    padding: 11px 12px;
+    border-radius: 10px;
+    border: 1px solid #d6d9e0;
+    outline: none;
+    font-size: 14px;
+    transition: all 0.25s ease;
+}
+
+input:focus {
+    border-color: #7b2ff7;
+    box-shadow: 0 0 0 2px rgba(123,47,247,0.2);
+}
 
         /* Green CTA Button */
-        button {
-            background: #2ecc71;
-            border: none;
-            padding: 10px 18px;
-            border-radius: 8px;
-            color: white;
-            cursor: pointer;
-        }
+       button {
+    background: linear-gradient(135deg, #7b2ff7, #f107a3);
+    border: none;
+    padding: 11px 20px;
+    border-radius: 10px;
+    color: white;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 8px 18px rgba(123,47,247,0.35);
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px rgba(123,47,247,0.55);
+}
+
+button:active {
+    transform: scale(0.96);
+}
 
         button:hover {
             background: #27ae60;
