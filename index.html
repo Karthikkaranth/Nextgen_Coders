@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Modern Chat UI</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            /* Blue → Purple Gradient */
+            background: linear-gradient(to top, #0a1f44, #6a11cb);
+        }
+
+        /* Main White Panel */
+        .panel {
+            width: 900px;
+            height: 550px;
+            background: #ffffff;
+            border-radius: 20px;
+            display: flex;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        /* Left Section (branding / visual) */
+        .left {
+            width: 35%;
+            background: #f7f9fc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: #e0e6ed;
+        }
+
+        /* Right Section (chat area) */
+        .right {
+            width: 65%;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        /* Chat container */
+        #chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .bubble {
+            max-width: 70%;
+            padding: 10px 14px;
+            margin: 6px 0;
+            border-radius: 12px;
+            font-size: 14px;
+        }
+
+        .user {
+            background: #f1f3f5;
+            align-self: flex-start;
+        }
+
+        .system {
+            background: #4CAF50;
+            color: white;
+            align-self: flex-end;
+            text-align: right;
+        }
+
+        .date-label {
+            display: block;
+            font-size: 10px;
+            margin-top: 4px;
+            opacity: 0.7;
+        }
+
+        /* Input area */
+        .input-area {
+            display: flex;
+            margin-top: 10px;
+            gap: 10px;
+        }
+
+        input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            outline: none;
+        }
+
+        /* Green CTA Button */
+        button {
+            background: #2ecc71;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #27ae60;
+        }
+
+        /* Grey helper text */
+        .helper {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="panel">
+
+    <!-- LEFT SIDE -->
+    <div class="left">
+        <div class="circle"></div>
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="right">
+
+        <div id="chat-container"></div>
+
+        <div class="input-area">
+            <select id="language">
+                <option value="as">Assamese</option>
+                <option value="bn">Bengali</option>
+                <option value="brx">Bodo</option>
+                <option value="doi">Dogri</option>
+                <option value="gu">Gujarati</option>
+                <option value="hi">Hindi</option>
+                <option value="kn">Kannada</option>
+                <option value="ks">Kashmiri</option>
+                <option value="kok">Konkani</option>
+                <option value="mai">Maithili</option>
+                <option value="ml">Malayalam</option>
+                <option value="mni">Manipuri</option>
+                <option value="mr">Marathi</option>
+                <option value="ne">Nepali</option>
+                <option value="or">Odia</option>
+                <option value="pa">Punjabi</option>
+                <option value="sa">Sanskrit</option>
+                <option value="sat">Santali</option>
+                <option value="sd">Sindhi</option>
+                <option value="ta">Tamil</option>
+                <option value="te">Telugu</option>
+                <option value="ur">Urdu</option>
+                </select>
+            <input type="text" id="userInput" placeholder="Type here...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+
+        <div class="helper">Your messages are securely processed</div>
+
+    </div>
+</div>
+
+<script>
+    const container = document.getElementById('chat-container');
+
+    function addBubble(text, sender, date = "") {
+        const div = document.createElement('div');
+        div.className = `bubble ${sender}`;
+        div.innerHTML = `<pre>${text}</pre>`;
+        if(date) {
+            div.innerHTML += `<span class="date-label">${date}</span>`;
+        }
+        container.appendChild(div);
+        container.scrollTop = container.scrollHeight;
+    }
+
+    window.onload = async () => {
+        const res = await fetch('/history');
+        const history = await res.json();
+        history.forEach(m => addBubble(m.text, m.sender, m.date_str));
+    };
+
+    async function sendMessage() {
+        const input = document.getElementById('userInput');
+        const lang = document.getElementById('language');
+        const val = input.value;
+        if(!val) return;
+
+        addBubble(val, 'user');
+        input.value = '';
+
+        const res = await fetch('/send', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({text: val,lan:lang})
+        });
+
+        const data = await res.json();
+        addBubble(data.reply, 'system', data.date);
+    }
+</script>
+
+</body>
+</html>
