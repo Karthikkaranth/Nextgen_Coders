@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Register</title>
+
+<style>
+body {
+    height: 100vh;
+    background: #0f0f1a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "Segoe UI";
+}
+
+/* Container */
+.container {
+    width: 450px;
+    background: #1c1c2b;
+    padding: 40px;
+    border-radius: 20px;
+    color: #fff;
+    position: relative;
+    box-shadow: 0 0 25px rgba(0,0,0,0.5);
+}
+
+/* Back Button */
+.back-btn {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    cursor: pointer;
+    color: #aaa;
+    font-size: 14px;
+}
+.back-btn:hover {
+    color: #fff;
+}
+
+/* Inputs */
+input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    background: transparent;
+    border: 1px solid #444;
+    border-radius: 8px;
+    color: #fff;
+    outline: none;
+}
+
+input:focus {
+    border-color: #7a3cff;
+}
+
+/* Button */
+button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: #7a3cff;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+button:hover {
+    background: #692de0;
+}
+
+/* Popup */
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    visibility: hidden;
+    opacity: 0;
+    transition: 0.3s;
+}
+
+/* Popup Box */
+.popup-box {
+    background: #1c1c2b;
+    padding: 30px 40px;
+    border-radius: 15px;
+    text-align: center;
+    color: #fff;
+    box-shadow: 0 0 25px rgba(122,60,255,0.6);
+    animation: pop 0.4s ease;
+}
+
+/* Tick Icon */
+.tick {
+    font-size: 40px;
+    color: #00ffae;
+    margin-bottom: 10px;
+}
+
+/* Show popup */
+.popup.show {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Animation */
+@keyframes pop {
+    from {
+        transform: scale(0.7);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="back-btn" onclick="goBack()">← Back</div>
+
+<h2>Create Account</h2>
+
+<input type="text" id="username" placeholder="Username">
+<input type="email" id="email" placeholder="Email">
+<input type="password" id="password" placeholder="Password">
+
+<button onclick="registerUser()">Create Account</button>
+
+</div>
+
+<!-- Success Popup -->
+<div id="successPopup" class="popup">
+    <div class="popup-box">
+        <div class="tick">✔</div>
+        <h3>Account Created!</h3>
+        <p>Redirecting to login page...</p>
+    </div>
+</div>
+
+<script>
+
+function goBack() {
+    window.location.href = "/";
+}
+
+async function registerUser() {
+
+    let username = document.getElementById("username").value.trim();
+    let email = document.getElementById("email").value.trim();
+    let password = document.getElementById("password").value.trim();
+
+    if (!username || !email || !password) {
+        alert("Fill all fields");
+        return;
+    }
+
+    try {
+        let res = await fetch("/register", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({username, email, password})
+        });
+
+        let data = await res.json();
+
+        if (data.status === "success") {
+
+            let popup = document.getElementById("successPopup");
+            popup.classList.add("show");
+
+            // Redirect after 4 seconds
+            setTimeout(() => {
+                window.location.href = "/";
+            }, 4000);
+
+        } 
+        else if (data.status === "user_exists") {
+            alert("User already exists ⚠️");
+        } 
+        else {
+            alert("Error ❌");
+        }
+
+    } catch {
+        alert("Server error 😢");
+    }
+}
+</script>
+
+</body>
+</html>

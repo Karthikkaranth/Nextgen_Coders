@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Register</title>
+<title>Login</title>
 
 <style>
 * {
@@ -15,37 +15,36 @@
 
 body {
     height: 100vh;
-    background: #0f0f1a;
+    background: linear-gradient(135deg, #0f0f1a, #1a1a40);
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-/* Full Card */
+/* LOGIN BOX */
 .container {
-    width: 450px;
+    width: 420px;
     background: #1c1c2b;
     padding: 40px;
     border-radius: 20px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6);
     color: #fff;
+    text-align: center;
 }
 
 h2 {
     margin-bottom: 25px;
-    font-size: 26px;
-    text-align: center;
 }
 
-/* Input Fields */
 .input-box {
-    margin-bottom: 15px;
+    margin-bottom: 18px;
 }
 
+/* INPUT FIX */
 .input-box input {
     width: 100%;
-    padding: 12px;
-    background: transparent;
+    padding: 14px;
+    background: #1c1c2b;
     border: 1px solid #444;
     border-radius: 8px;
     color: #fff;
@@ -56,71 +55,87 @@ h2 {
     border-color: #7a3cff;
 }
 
-/* Error Message */
-.error {
-    color: #ff4d4d;
-    font-size: 13px;
-    margin-top: 5px;
+/* AUTOFILL FIX */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0px 1000px #1c1c2b inset !important;
+    -webkit-text-fill-color: #fff !important;
 }
 
-/* Password toggle */
-.password-box {
-    position: relative;
-}
-
-.password-box span {
-    position: absolute;
-    right: 12px;
-    top: 12px;
-    cursor: pointer;
-    color: #aaa;
-}
-
-/* Checkbox */
-.checkbox {
-    display: flex;
-    align-items: center;
-    font-size: 14px;
-    margin-top: 10px;
-    margin-bottom: 20px;
-}
-
-.checkbox input {
-    margin-right: 8px;
-}
-
-/* Button */
+/* BUTTON */
 .btn {
     width: 100%;
-    padding: 12px;
+    padding: 14px;
     border: none;
     border-radius: 8px;
     background: linear-gradient(135deg, #7a3cff, #5f2bff);
     color: white;
-    font-size: 16px;
     cursor: pointer;
-    transition: 0.3s;
 }
 
-.btn:hover {
-    opacity: 0.9;
+/* PASSWORD BOX */
+.password-box {
+    position: relative;
 }
 
-/* Login link */
-.login {
-    margin-top: 20px;
-    text-align: center;
-    font-size: 14px;
+.password-box input {
+    padding-right: 45px;
 }
 
-.login a {
-    color: #7a3cff;
-    text-decoration: none;
+/* 🔥 SIMPLE EYE ICON */
+.eye {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    opacity: 0.7;
 }
 
-/* Highlight error input */
-.input-error {
-    border-color: #ff4d4d !important;
+.eye:hover {
+    opacity: 1;
+}
+
+/* SUCCESS OVERLAY */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle, #1a1a40, #0f0f1a);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 9999;
+}
+
+.overlay.active {
+    display: flex;
+}
+
+.success-text {
+    font-size: 36px;
+    font-weight: bold;
+    color: #00ffae;
+    margin-bottom: 25px;
+}
+
+.loader {
+    width: 60px;
+    height: 60px;
+    border: 6px solid #333;
+    border-top: 6px solid #00ffae;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    100% { transform: rotate(360deg); }
 }
 </style>
 </head>
@@ -128,99 +143,72 @@ h2 {
 <body>
 
 <div class="container">
-
-    <h2>Create an Account</h2>
-
-    <div class="input-box">
-        <input type="text" id="username" placeholder="Username">
-        <div class="error" id="userError"></div>
-    </div>
+    <h2>Welcome 👋</h2>
 
     <div class="input-box">
-        <input type="email" id="email" placeholder="Email">
-        <div class="error" id="emailError"></div>
+        <input type="text" id="loginUsername" placeholder="Enter your username">
     </div>
 
     <div class="input-box password-box">
-        <input type="password" id="password" placeholder="Password">
-        <span onclick="togglePassword()">👁</span>
-        <div class="error" id="passError"></div>
+        <input type="password" id="loginPassword" placeholder="Enter your password">
+
+        <!-- 👁️ SIMPLE SVG ICON -->
+        <svg class="eye" onclick="togglePassword()" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="white">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+        </svg>
     </div>
 
-    <div class="checkbox">
-        <input type="checkbox" id="terms">
-        <label>I agree to Terms & Conditions</label>
-    </div>
-    <div class="error" id="termsError"></div>
+    <button class="btn" onclick="loginUser()">Login</button>
+</div>
 
-    <button class="btn" onclick="validateForm()">Create Account</button>
-
-    <div class="login">
-        Already have an account? <a href="#">Login</a>
-    </div>
-
+<!-- SUCCESS -->
+<div class="overlay" id="overlay">
+    <div class="success-text">Login Successful</div>
+    <div class="loader"></div>
 </div>
 
 <script>
+
 function togglePassword() {
-    let pass = document.getElementById("password");
-    pass.type = pass.type === "password" ? "text" : "password";
-}
+    let password = document.getElementById("loginPassword");
 
-function validateForm() {
-    let username = document.getElementById("username");
-    let email = document.getElementById("email");
-    let password = document.getElementById("password");
-    let terms = document.getElementById("terms");
-
-    let isValid = true;
-
-    // Clear previous errors
-    document.querySelectorAll(".error").forEach(e => e.innerText = "");
-    document.querySelectorAll("input").forEach(i => i.classList.remove("input-error"));
-
-    // Username validation
-    if (username.value.trim() === "") {
-        setError(username, "Username is required", "userError");
-        isValid = false;
-    } else if (username.value.includes(" ")) {
-        setError(username, "Username should not contain spaces", "userError");
-        isValid = false;
-    }
-
-    // Email validation
-    let emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
-    if (email.value.trim() === "") {
-        setError(email, "Email is required", "emailError");
-        isValid = false;
-    } else if (!email.value.match(emailPattern)) {
-        setError(email, "Enter a valid email", "emailError");
-        isValid = false;
-    }
-
-    // Password validation
-    if (password.value.trim() === "") {
-        setError(password, "Password is required", "passError");
-        isValid = false;
-    } else if (password.value.length < 6) {
-        setError(password, "Password must be at least 6 characters", "passError");
-        isValid = false;
-    }
-
-    // Terms validation
-    if (!terms.checked) {
-        document.getElementById("termsError").innerText = "You must accept Terms & Conditions";
-        isValid = false;
-    }
-
-    if (isValid) {
-        alert("Account Created Successfully 🚀");
+    if (password.type === "password") {
+        password.type = "text";
+    } else {
+        password.type = "password";
     }
 }
 
-function setError(input, message, errorId) {
-    input.classList.add("input-error");
-    document.getElementById(errorId).innerText = message;
+async function loginUser() {
+
+    let username = document.getElementById("loginUsername").value;
+    let password = document.getElementById("loginPassword").value;
+
+    if (!username || !password) {
+        alert("Fill all fields");
+        return;
+    }
+
+    let res = await fetch("/login", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({username, password})
+    });
+
+    let data = await res.json();
+
+    if (data.status === "success") {
+        document.getElementById("overlay").classList.add("active");
+
+        setTimeout(() => {
+            window.location.href = "/chat";
+        }, 3000);
+    } else {
+        alert("Invalid credentials");
+    }
 }
 </script>
 
