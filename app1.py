@@ -1,13 +1,26 @@
 from flask import Flask, request, jsonify, render_template, redirect, session
 from flask_cors import CORS
 from pymongo import MongoClient
+from dotenv import load_dotenv
+import os
+
+# Load environment variables
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
 
-app.secret_key = "supersecretkey"
+# Secret key from .env
+app.secret_key = os.getenv("SECRET_KEY")
 
-client = MongoClient("mongodb://localhost:27017/")
+# ======================
+# 🔐 MONGODB CONNECTION (SECURE)
+# ======================
+
+MONGO_URI = os.getenv("MONGO_URI")
+
+client = MongoClient(MONGO_URI)
+
 db = client["userDB"]
 users = db["users"]
 
@@ -19,7 +32,7 @@ users = db["users"]
 def home():
     return render_template("index.html")
 
-@app.route("/account")   # ✅ REGISTER PAGE
+@app.route("/account")
 def account():
     return render_template("account.html")
 
@@ -29,9 +42,8 @@ def chat():
         return render_template("chat.html", username=session["user"])
     return redirect("/")
 
-
 # ======================
-# 🔹 REGISTER API (POST ONLY)
+# 🔹 REGISTER
 # ======================
 
 @app.route("/register", methods=["POST"])
@@ -63,7 +75,6 @@ def register():
 
     return jsonify({"status": "success"})
 
-
 # ======================
 # 🔹 LOGIN
 # ======================
@@ -86,7 +97,6 @@ def login():
     else:
         return jsonify({"status": "fail"})
 
-
 # ======================
 # 🔹 LOGOUT
 # ======================
@@ -95,7 +105,6 @@ def login():
 def logout():
     session.pop("user", None)
     return redirect("/")
-
 
 # ======================
 if __name__ == "__main__":
